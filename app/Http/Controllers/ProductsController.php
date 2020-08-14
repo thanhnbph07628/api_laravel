@@ -21,7 +21,16 @@ class ProductsController extends Controller
         // ->join('category', 'category.id', '=', 'products.iddm')
         // ->select('products.*', 'category.name  as ten_danh_muc')
         // ->get();
-        $resurt = Products::all();
+        $pardam =  request()->all();
+        $query_pardam=[];
+        $query_pardam['key'] = ($pardam['key']!='')?$pardam['key']:null;
+        
+
+        $queryBulder = Products::query(); 
+        if (isset($query_pardam['key']) && $query_pardam['key'] != null) {
+            $queryBulder->where('name', 'like', '%'.$query_pardam['key'].'%');
+        }    
+        $resurt = $queryBulder->get();
         foreach ($resurt as $value) {
             if($value->iddm == 0){
                 $value->tendm ='Chưa có danh mục';
